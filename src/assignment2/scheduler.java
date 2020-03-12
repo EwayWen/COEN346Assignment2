@@ -24,8 +24,14 @@ public class scheduler implements Runnable {
 		System.out.println(processList.size());
 		
 		scheduler myScheduler = new scheduler();
-		while(processList != null) {
+		while(processList.size() > 0) {
 			myScheduler.run();
+		}
+		System.out.println("-----------------------------");
+		System.out.println("Waiting Times:");
+		for(int i = 0; i < completeList.size(); i++) {
+			process processI = completeList.get(i);
+			System.out.println(processI.getName() + ": " + processI.getWaitingTime());
 		}
 	}
 
@@ -38,7 +44,7 @@ public class scheduler implements Runnable {
 		process next = null;
 		try {
 			hasCPU.acquire();
-			if (processList!=null) {
+			if (processList.size() > 0) {
 				next = processList.get(0);
 				for (int i = 0; i < processList.size(); i++) {
 					//System.out.println("pass");
@@ -56,10 +62,7 @@ public class scheduler implements Runnable {
 					}
 				}
 			}
-			else {
-				for (int i = 0; i < completeList.size(); i++)
-				System.out.print("");
-			}
+			
 
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block

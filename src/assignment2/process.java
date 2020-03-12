@@ -39,7 +39,6 @@ public class process implements Runnable {
 				setStarted(true);
 			}
 			System.out.println("Time " + currentTime + ", " + name + ", " + "Resumed");
-			setWaitingTime(currentTime - arrivalTime - elapsedTime);
 			elapsedTime += quantum;
 			remainingTime -= quantum;
 			if (elapsedTime >= processTime) {
@@ -47,6 +46,7 @@ public class process implements Runnable {
 				remainingTime = 0;
 				elapsedTime = processTime;
 				setFinished(true);
+				setWaitingTime(currentTime - arrivalTime - processTime);
 			} else {
 				currentTime += quantum;
 			}
@@ -122,6 +122,10 @@ public class process implements Runnable {
 
 	public void setRemainingTime(int remainingTime) {
 		this.remainingTime = remainingTime;
+	}
+
+	public String getName() {
+		return name;
 	}
 
 }
