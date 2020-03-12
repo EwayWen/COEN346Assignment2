@@ -1,2 +1,2 @@
-module assignment2 {
+module COEN346Assignment2Actual {
 }
