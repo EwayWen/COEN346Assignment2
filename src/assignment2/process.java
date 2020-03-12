@@ -2,51 +2,56 @@ package assignment2;
 
 import java.util.concurrent.*;
 
+//This class is the process class that will simulate processes running on a single thread
+
 public class process implements Runnable {
-	Semaphore hasCPU = null;
-	private String name;
-	private int arrivalTime;
-	private int processTime;
-	private int quantum;
-	private int waitingTime;
-	private int elapsedTime;
-	private int remainingTime;
-	private boolean isStarted;
-	private boolean isFinished;
-	volatile static int currentTime = 1;
+	Semaphore hasCPU = null; // Used to ensure exclusion/simulate single thread
+	private String name; // Process name
+	private int arrivalTime; // Time of arrival
+	private int processTime; // Total needed runtime
+	private int quantum; // One interval of process time
+	private int waitingTime; // Time spent in queue
+	private int elapsedTime; // Elapsed runtime
+	private int remainingTime; // Remaining time to completion
+	private boolean isStarted; // Flag if process has been started
+	private boolean isFinished; // Flag if process has been completed
+	volatile static int currentTime = 1; // Static member tracking the system time
+	static int nameIterator = 1; // Tracks the name of the process
 
 	process(int arrivalT, int processT, Semaphore hasCPU) {
-
+		// Class instantiation
 		setArrivalTime(arrivalT);
 		setProcessTime(processT);
 		setRemainingTime(processT);
-		quantum = (int) (0.1 * processT);
 		setWaitingTime(0);
 		setStarted(false);
+		quantum = (int) (0.1 * processT); // We take the quantum to be an integer value.
 		if (quantum < 1) {
 			quantum = 1;
 		}
 		this.hasCPU = hasCPU;
-		name = "Process " + getArrivalTime();
+		name = "Process " + nameIterator; // Automatically names the process based on order arrived.
+		nameIterator += 1;
 	}
 
 	@Override
 	public void run() {
 		try {
-			hasCPU.acquire();
-			if (!isStarted) {
+			hasCPU.tryAcquire(); // Acquires semaphore
+			if (!isStarted) { // Checks to see if the process has started
 				System.out.println("Time " + currentTime + ", " + name + ", " + "Started");
 				setStarted(true);
 			}
 			System.out.println("Time " + currentTime + ", " + name + ", " + "Resumed");
-			elapsedTime += quantum;
-			remainingTime -= quantum;
-			if (elapsedTime >= processTime) {
-				currentTime += processTime - (elapsedTime - quantum);
-				remainingTime = 0;
-				elapsedTime = processTime;
+			elapsedTime += quantum; //Incrementing elapsed time by a quantum
+			remainingTime -= quantum; //Decrementing remaining time by a quantum
+			if (elapsedTime >= processTime) { //Checking for process completion
+				currentTime += processTime - (elapsedTime - quantum); //Accounting for if quantum is larger than remaining time
+				remainingTime = 0; //We are in this section so we can do a hard set
+				elapsedTime = processTime; //We are in this section so we can do a hard set
 				setFinished(true);
-				setWaitingTime(currentTime - arrivalTime - processTime);
+				setWaitingTime(currentTime - arrivalTime - processTime); 
+				//Waiting time is calculated by total time elapsed, minus time spent processing and minus time before arrival
 			} else {
 				currentTime += quantum;
 			}
@@ -54,11 +59,8 @@ public class process implements Runnable {
 			if (isFinished) {
 				System.out.println("Time " + currentTime + ", " + name + ", " + "Finished");
 			}
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		} finally {
-			hasCPU.release();
+			hasCPU.release(); //release semaphore
 		}
 
 	}
@@ -114,6 +116,10 @@ public class process implements Runnable {
 
 	public int getCurrentTime() {
 		return currentTime;
+	}
+
+	public void setCurrentTime(int i) {
+		currentTime = i;
 	}
 
 	public int getRemainingTime() {
