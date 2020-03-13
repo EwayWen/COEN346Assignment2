@@ -61,7 +61,8 @@ public class scheduler implements Runnable {
 				}
 			}
 			if (next.getCurrentTime() < next.getArrivalTime()) { //Check to see if a process is being started before it arrives
-				next.setCurrentTime(next.getCurrentTime() + 1);
+				next.setCurrentTime(next.getCurrentTime() + 1); 
+				//since we know this process is the priority, but arrives after the current time, we simply increment the time.
 				next = null;
 			}
 			if (next != null) {
