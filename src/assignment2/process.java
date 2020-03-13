@@ -39,10 +39,12 @@ public class process implements Runnable {
 		try {
 			hasCPU.tryAcquire(); // Acquires semaphore
 			if (!isStarted) { // Checks to see if the process has started
-				System.out.println("Time " + currentTime + ", " + name + ", " + "Started");
+				scheduler.addToOutputString("Time " + currentTime + ", " + name + ", " + "Started" + "\n");
+				//System.out.println("Time " + currentTime + ", " + name + ", " + "Started");
 				setStarted(true);
 			}
-			System.out.println("Time " + currentTime + ", " + name + ", " + "Resumed");
+			scheduler.addToOutputString("Time " + currentTime + ", " + name + ", " + "Resumed" + "\n");
+			//System.out.println("Time " + currentTime + ", " + name + ", " + "Resumed");
 			elapsedTime += quantum; //Incrementing elapsed time by a quantum
 			remainingTime -= quantum; //Decrementing remaining time by a quantum
 			if (elapsedTime >= processTime) { //Checking for process completion
@@ -55,9 +57,11 @@ public class process implements Runnable {
 			} else {
 				currentTime += quantum;
 			}
-			System.out.println("Time " + currentTime + ", " + name + ", " + "Paused");
+			scheduler.addToOutputString("Time " + currentTime + ", " + name + ", " + "Paused" + "\n");
+			//System.out.println("Time " + currentTime + ", " + name + ", " + "Paused");
 			if (isFinished) {
-				System.out.println("Time " + currentTime + ", " + name + ", " + "Finished");
+				scheduler.addToOutputString("Time " + currentTime + ", " + name + ", " + "Finished" + "\n");
+				//System.out.println("Time " + currentTime + ", " + name + ", " + "Finished");
 			}
 		} finally {
 			hasCPU.release(); //release semaphore
