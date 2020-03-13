@@ -1,30 +1,59 @@
 package assignment2;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 import java.util.concurrent.*;
+import java.io.*;
 
 import assignment2.process;
 
-public class scheduler implements Runnable {
+public class scheduler<myScheduler> implements Runnable {
 
+	public static String output = "";
 	public static Semaphore hasCPU = new Semaphore(1); // initialize semaphore
 	static List<process> processList = new ArrayList<process>(); // initialize needed listArrays
 	static List<process> completeList = new ArrayList<process>();
 
 	public static void main(String args[]) {
 
-		process p1 = new process(1, 5, hasCPU);
-		process p2 = new process(2, 3, hasCPU);
-		process p3 = new process(3, 1, hasCPU);
-		processList.add(p1);
-		processList.add(p2);
-		processList.add(p3);
-
 		//TODO: Add input from file
 		//Format for input should be to read line, then pass input to constructor
 		//Constuctor looks like: process(<arrival_time> , <process_time>, hasCPU)
 		//hasCPU is the semaphore, see above block for example.
+
+		try{
+			Scanner sc = new Scanner (new File("input.txt"));
+			do
+			{
+				//Instantiate process inputs for each Process for count for
+				//each input. If count is 2 or greater, it would have an out
+				//of bounds error.
+				int[] processInput;
+				String line = sc.nextLine();
+				String[] splitString = line.split("\\s");
+				if (splitString.length > 2)
+				{
+					throw (new Exception("There are too many inputs on the same line"));
+				}
+
+				processInput = new int[2];
+				for (int n = 0; n < 2; n++)
+				{
+					//Will throw error if not an int
+					processInput[n] = Integer.parseInt(splitString[n]);
+				}
+				process p1 = new process (processInput[0],processInput[1], hasCPU);
+
+				//add new Process to processList
+				processList.add(p1);
+			}
+			while (sc.hasNextLine());
+
+			sc.close();
+
+
 
 		scheduler myScheduler = new scheduler(); // Creating runnable object
 		synchronized (myScheduler) { // Ensuring single thread execution
@@ -32,14 +61,31 @@ public class scheduler implements Runnable {
 				myScheduler.run();
 			}
 		}
-		System.out.println("-----------------------------");
-		System.out.println("Waiting Times:");
+		//Saves string to then have it on system out and onto text file
+		output += ("-----------------------------\n");
+		output += ("Waiting Times:\n");
 		for (int i = 0; i < completeList.size(); i++) { // Printing waiting times
 			process processI = completeList.get(i);
-			System.out.println(processI.getName() + ": " + processI.getWaitingTime());
+			output += (processI.getName() + ": " + processI.getWaitingTime() + "\n" );
 		}
-		
-		//TODO: Add output to file
+		System.out.println(output);
+
+		//Output to text
+		try (PrintWriter out = new PrintWriter("output.txt")) {
+			out.println(output);
+		}
+
+		}
+		catch(Exception e)
+		{
+			System.out.println("There was an error running the program");
+			e.printStackTrace();
+		}
+	}
+
+	public static void addToOutputString(String stringtoAdd)
+	{
+		output += stringtoAdd;
 	}
 
 	@Override
