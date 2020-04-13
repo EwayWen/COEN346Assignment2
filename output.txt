@@ -1,30 +1,33 @@
-Time 1, Process 1, Started
-Time 1, Process 1, Resumed
-Time 2, Process 1, Paused
-Time 2, Process 2, Started
-Time 2, Process 2, Resumed
-Time 3, Process 2, Paused
-Time 3, Process 3, Started
-Time 3, Process 3, Resumed
-Time 4, Process 3, Paused
-Time 4, Process 3, Finished
-Time 4, Process 2, Resumed
-Time 5, Process 2, Paused
-Time 5, Process 2, Resumed
-Time 6, Process 2, Paused
-Time 6, Process 2, Finished
-Time 6, Process 1, Resumed
-Time 7, Process 1, Paused
-Time 7, Process 1, Resumed
-Time 8, Process 1, Paused
-Time 8, Process 1, Resumed
-Time 9, Process 1, Paused
-Time 9, Process 1, Resumed
-Time 10, Process 1, Paused
-Time 10, Process 1, Finished
+Clock: 0, Process 1, Started
+Clock: 0, Process 1, Resumed
+Clock: 56, Process 1, Store: Variable 1, Value: 5
+Clock: 142, Process 1, Store: Variable 2, Value: 3
+Clock: 529, Process 1, Store: Variable 3, Value: 7
+SWAP: Variable 3 with Variable 1
+Clock: 888, Process 1, Lookup: Variable 3, Value 7
+Clock: 1000, Process 1, Paused
+Clock: 1000, Process 1, Finished
+Clock: 1000, Process 2, Started
+Clock: 1000, Process 2, Resumed
+Clock: 1247, Process 2, Lookup: Variable 2, Value 3
+Clock: 1465, Process 2, Release: Variable 1
+Clock: 1861, Process 2, Store: Variable 1, Value: 8
+SWAP: Variable 1 with Variable 3
+Clock: 2000, Process 2, Paused
+Clock: 2000, Process 3, Started
+Clock: 2000, Process 3, Resumed
+Clock: 2243, Process 3, Lookup: Variable 1, Value 8
+Clock: 2528, Process 3, Lookup: Variable 2, Value 3
+Clock: 3000, Process 3, Paused
+Clock: 3000, Process 2, Resumed
+Clock: 4000, Process 2, Paused
+Clock: 4000, Process 2, Finished
+Clock: 4000, Process 3, Resumed
+Clock: 5000, Process 3, Paused
+Clock: 5000, Process 3, Finished
 -----------------------------
 Waiting Times:
-Process 3: 0
-Process 2: 1
-Process 1: 4
+Process 1: 0
+Process 2: 1000
+Process 3: 1000
 
